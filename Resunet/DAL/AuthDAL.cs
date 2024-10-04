@@ -4,8 +4,7 @@ using Drapper;
 using Npgsql;
 using Resunet.DAL.Models;
 
-
-namespace Resunet.DAL.Auth
+namespace Resunet.DAL
 {
     public class AuthDAL : IAuthDAL
     {
