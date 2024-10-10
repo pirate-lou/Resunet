@@ -1,3 +1,4 @@
+using System;
 using Resunet.DAL;
 using Resunet.DAL.Models;
 
@@ -5,16 +6,16 @@ namespace Resunet.BL.Auth
 {
     public class AuthBL : IAuthBL
     {
-        public readonly IAuthBL authDAL;
+        private readonly IAuthDAL authDal;
 
-        public AuthBL(IAuthDAL authDAL)
+        public AuthBL(IAuthDAL authDal)
         {
-            this.authDAL = this.authDAL;
+            this.authDal =  authDal;
         }
 
         public async Task<int> CreateUser(UserModel user)
         {
-            return await authDAL.CreateUser(user);
+            return await authDal.CreateUser(user);
         }
     }
 }
