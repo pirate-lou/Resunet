@@ -16,6 +16,7 @@ namespace Resunet.DAL
                 // только в те моменты, когда в pull чего-то не хватает и нужно подтянуть что-то
                 // открыть доп соединение, но это будет редко
                 await connection.OpenAsync();
+
                 return await connection.QueryFirstOrDefaultAsync<UserModel>(@" 
                     select UserId, Email, Password, Salt, Status 
                     from AppUser 
@@ -41,11 +42,14 @@ namespace Resunet.DAL
         {
             using (var connection = new NpgsqlConnection(DbHelper.ConnString))
             {
-                await connection.OpenAsync();
+                // после регистрации должен быть авторизован, но с await не авторизован
+                await connection.OpenAsync(); 
+                // connection.Open();
+
                 string sql = @"insert into AppUser(Email, Password, Salt, Status)
                     values(@Email, @Password, @Salt, @Status);
-                    /* вернуть id последней записи для postgre */
-                    SELECT currval(pg_get_serial_sequence('AppUser', 'userid'))";
+                    SELECT currval(--вернуть id последней записи для postgre--
+                    pg_get_serial_sequence('AppUser', 'userid'))";
                 return await connection.QuerySingleAsync<int>(sql, model);
             }
         }

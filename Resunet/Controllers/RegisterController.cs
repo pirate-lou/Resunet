@@ -24,21 +24,19 @@ namespace Resunet.Controllers
             return View("Index", new RegisterViewModel());
         }
 
-        [HttpPost] 
+        [HttpPost]
         [Route("/register")]
-        public IActionResult IndexSave(RegisterViewModel model)
+        public async Task<IActionResult> IndexSave(RegisterViewModel model)
         {
             if (ModelState.IsValid)
             {
-                authBl.CreateUser(AuthMapper.MapRegisterViewModelToUserModel(model));
-                // если зарегался => отправляем на домашнюю страницу
-                return Redirect("/"); 
+                await authBl.CreateUser(AuthMapper.MapRegisterViewModelToUserModel(model));
+                return Redirect("/"); // отправить на home page
             }
-            
-            // файл "Index" будет искаться, по умолчанию, в папке с названием класса
-            // но без "Controller", т.е. "Register"
-            // и если в папке "View" указать папку "Register" как-то по-другому,
-            // то придется здесь придется указывать полное имя (где его искать)
+
+            // файл "Index" будет искаться, по умолчанию, в папке с названием класса но без 
+            // "Controller", т.е. "Register" и если в папке "View" указать папку "Register" как-то
+            // по-другому, то придется здесь придется указывать полное имя (где его искать)
             return View("Index", model);
         }
     }

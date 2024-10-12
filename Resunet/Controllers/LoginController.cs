@@ -22,15 +22,14 @@ namespace Resunet.Controllers
 
         [HttpPost]
         [Route("/login")]
-        public IActionResult IndexSave(LoginViewModel model)
+        public async Task<IActionResult> IndexSave(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                authBl.AunthenticateUser(model.Email!, model.Password!, model.RememberMe == true);
-
+                await authBl.AunthenticateUser(
+                    model.Email!, model.Password!, model.RememberMe == true);
                 return Redirect("/");
             }
-
             return View("Index", model);
         }
     }

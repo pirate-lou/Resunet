@@ -1,4 +1,3 @@
-using System;
 using Resunet.DAL;
 using Resunet.DAL.Models;
 
@@ -35,11 +34,12 @@ namespace Resunet.BL.Auth
             httpContextAccessor.HttpContext?.Session.SetInt32(
                 AuthConstants.AUTH_SESSION_PARAM_NAME, id);
         }
-        
+
         public async Task<int> AunthenticateUser(
             string email, string password, bool rememberMe)
         {
             var user = await authDal.GetUser(email);
+            // захешировать то, что передали от пользователя и сравнить два хеша 
             if (user.Password == encrypt.HashPassword(password, user.Salt))
             {
                 Login(user.UserId);

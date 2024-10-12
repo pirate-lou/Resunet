@@ -4,7 +4,7 @@ namespace Resunet.ViewModels
 {
     public class LoginViewModel
     {
-        [Required] 
+        [Required] // должно быть инициализировано инициализатором объекта
         public string? Email { get; set; }
         [Required] 
         public string? Password { get; set; }
