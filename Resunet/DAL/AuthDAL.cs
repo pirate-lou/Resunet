@@ -40,9 +40,11 @@ namespace Resunet.DAL
             {
                 connection.Open();
                 string sql = @"insert into AppUser(Email, Password, Salt, Status)
-                    values(@Email, @Password, @Salt, @Status)";
+                    values(@Email, @Password, @Salt, @Status);
+                    /* вернуть id последней записи для postgre */
+                    SELECT currval(pg_get_serial_sequence('AppUser', 'userid'))";
 
-                return await connection.ExecuteAsync(sql, model);
+                return await connection.QuerySingleAsync<int>(sql, model);
             }
         }
     }
