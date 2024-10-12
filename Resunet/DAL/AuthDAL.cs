@@ -11,8 +11,11 @@ namespace Resunet.DAL
         {
             using (var connection = new NpgsqlConnection(DbHelper.ConnString))
             {
-                connection.Open();
-
+                // OpenAsync - не будет держать ресурсы потока
+                // сильно на производительность не повлияет 
+                // только в те моменты, когда в pull чего-то не хватает и нужно подтянуть что-то
+                // открыть доп соединение, но это будет редко
+                await connection.OpenAsync();
                 return await connection.QueryFirstOrDefaultAsync<UserModel>(@" 
                     select UserId, Email, Password, Salt, Status 
                     from AppUser 
@@ -24,7 +27,7 @@ namespace Resunet.DAL
         {
             using (var connection = new NpgsqlConnection(DbHelper.ConnString))
             {
-                connection.Open();
+                await connection.OpenAsync();
 
                 // если запись не найдена в бд => возвращается пустой объект 
                 return await connection.QueryFirstOrDefaultAsync<UserModel>(@" 
@@ -38,12 +41,11 @@ namespace Resunet.DAL
         {
             using (var connection = new NpgsqlConnection(DbHelper.ConnString))
             {
-                connection.Open();
+                await connection.OpenAsync();
                 string sql = @"insert into AppUser(Email, Password, Salt, Status)
                     values(@Email, @Password, @Salt, @Status);
                     /* вернуть id последней записи для postgre */
                     SELECT currval(pg_get_serial_sequence('AppUser', 'userid'))";
-
                 return await connection.QuerySingleAsync<int>(sql, model);
             }
         }

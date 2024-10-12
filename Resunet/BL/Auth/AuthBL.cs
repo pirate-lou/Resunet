@@ -28,15 +28,25 @@ namespace Resunet.BL.Auth
             return id;
         }
 
-        // авторизовались и нужно запомнить юзера в системе
-        public void Login(int id)
+        // авторизовались и запоминаем user в системе
+        private void Login(int id)
         {
-            // теперь, если в сессии есть userid и мы знаем его id - значит 
-            // этот пользователь авторизован 
-            httpContextAccessor.HttpContext?.Session.SetInt32(AuthConstants.AUTH_SESSION_PARAM_NAME, id);
-            /*
-             * 
-             */
+            // если в сессии есть userid и мы знаем его id - значит user авторизован 
+            httpContextAccessor.HttpContext?.Session.SetInt32(
+                AuthConstants.AUTH_SESSION_PARAM_NAME, id);
+        }
+        
+        public async Task<int> AunthenticateUser(
+            string email, string password, bool rememberMe)
+        {
+            var user = await authDal.GetUser(email);
+            if (user.Password == encrypt.HashPassword(password, user.Salt))
+            {
+                Login(user.UserId);
+                return user.UserId;
+            }
+
+            return 0;
         }
     }
 }

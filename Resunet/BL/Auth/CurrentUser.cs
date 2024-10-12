@@ -12,9 +12,10 @@ namespace Resunet.BL.Auth
 
         public bool IsLoggedIn()
         {
-            // проверяем, есть ли там userid
-            // если пользователь сохраняется в сессии, значит он ужу авторизован  
-            return httpContextAccessor.HttpContext?.Session.GetInt32(AuthConstants.AUTH_SESSION_PARAM_NAME) != null;
+            // проверяем на userid, если user сохраняется в сессии => он авторизован  
+            var id = httpContextAccessor.HttpContext?.Session.GetInt32(
+                AuthConstants.AUTH_SESSION_PARAM_NAME);
+            return id != null;
         }
     }
 }
