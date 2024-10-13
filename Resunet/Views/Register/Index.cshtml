@@ -9,11 +9,13 @@
         <p>
             <label>Email</label>
             <input name="Email" type="text" value="@Model.Email"/>
+            <div class="error">@Html.ValidationMessageFor(m => m.Email)</div> <!--Вот эта вещь обязательна!-->
         </p>
         <p>
             <label>Пароль</label>
             <input name="Password" type="password"/>
-        </p>   
+            <div class="error">@Html.ValidationMessageFor(m => m.Password)</div>
+        </p>
         <button>Зарегестрироваться</button>
     </form>
 </div>
