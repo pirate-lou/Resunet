@@ -1,3 +1,5 @@
+using System.ComponentModel.DataAnnotations;
+using System.Data;
 using Resunet.DAL;
 using Resunet.DAL.Models;
 
@@ -22,6 +24,7 @@ namespace Resunet.BL.Auth
         {
             user.Salt = Guid.NewGuid().ToString();
             user.Password = encrypt.HashPassword(user.Password, user.Salt);
+            
             int id = await authDal.CreateUser(user);
             Login(id);
             return id;
@@ -47,6 +50,14 @@ namespace Resunet.BL.Auth
             }
 
             return 0;
+        }
+
+        public async Task<ValidationResult?> ValidateEmail(string email)
+        {
+            var user = await authDal.GetUser(email);
+            if (user.UserId != null)
+                return new ValidationResult("Email уже существует");
+            return null;
         }
     }
 }

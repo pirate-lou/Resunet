@@ -30,8 +30,21 @@ namespace Resunet.Controllers
         {
             if (ModelState.IsValid)
             {
+                // если какой-то косяк с Email, то скипаем
+                bool isValid = true;
+                var errorModel = await authBl.ValidateEmail(model.Email ?? "");
+
+                if (errorModel != null)
+                {
+                    ModelState.TryAddModelError("Email", errorModel.ErrorMessage!);
+                }
+            }
+
+            // и если модель все еще валидная => создаем пользователя
+            if (ModelState.IsValid)
+            {
                 await authBl.CreateUser(AuthMapper.MapRegisterViewModelToUserModel(model));
-                return Redirect("/"); // отправить на home page
+                return Redirect("/"); // send on home page
             }
 
             // файл "Index" будет искаться, по умолчанию, в папке с названием класса но без 
