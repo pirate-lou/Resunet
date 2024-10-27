@@ -10,7 +10,6 @@ namespace Resunet.BL.Auth
 
         public string HashPassword(string password, string salt)
         {
-            // для хеширования паролей 
             return Convert.ToBase64String(KeyDerivation.Pbkdf2(
                 password,
                 System.Text.Encoding.ASCII.GetBytes(salt),

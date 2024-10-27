@@ -12,8 +12,8 @@ namespace Resunet.BL.Auth
         private readonly IHttpContextAccessor httpContextAccessor;
 
         public AuthBL(IAuthDAL authDal,
-            IEncrypt encrypt,
-            IHttpContextAccessor httpContextAccessor) // получить доступ к контексту http  
+            Encrypt encrypt,
+            IHttpContextAccessor httpContextAccessor)
         {
             this.authDal = authDal;
             this.encrypt = encrypt;
@@ -24,16 +24,16 @@ namespace Resunet.BL.Auth
         {
             user.Salt = Guid.NewGuid().ToString();
             user.Password = encrypt.HashPassword(user.Password, user.Salt);
-            
+
             int id = await authDal.CreateUser(user);
             Login(id);
             return id;
         }
 
-        // авторизовались и запоминаем user в системе
+        // log in and remember user in system  
         private void Login(int id)
         {
-            // если в сессии есть userid и мы знаем его id - значит user авторизован 
+            // if session has userid and we know his id - it means, that user authorised 
             httpContextAccessor.HttpContext?.Session.SetInt32(
                 AuthConstants.AUTH_SESSION_PARAM_NAME, id);
         }
@@ -42,13 +42,11 @@ namespace Resunet.BL.Auth
             string email, string password, bool rememberMe)
         {
             var user = await authDal.GetUser(email);
-            // захешировать то, что передали от пользователя и сравнить два хеша 
             if (user.Password == encrypt.HashPassword(password, user.Salt))
             {
                 Login(user.UserId);
                 return user.UserId;
             }
-
             return 0;
         }
 

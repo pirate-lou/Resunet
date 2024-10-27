@@ -3,13 +3,12 @@ using Microsoft.AspNetCore.Mvc;
 using Resunet.ViewMapper;
 using Resunet.ViewModels;
 
-// ничего не знает о DAL уровне, его прерогатива работать только с BL уровнем 
+// ничего не знает о DAL уровне, его прерогатива работать только с BL уровнем
 
 namespace Resunet.Controllers
 {
     public class RegisterController : Controller
     {
-        // никогда не будем менять 
         private readonly IAuthBL authBl;
 
         public RegisterController(IAuthBL authBl)
@@ -31,9 +30,7 @@ namespace Resunet.Controllers
             if (ModelState.IsValid)
             {
                 // если какой-то косяк с Email, то скипаем
-                bool isValid = true;
                 var errorModel = await authBl.ValidateEmail(model.Email ?? "");
-
                 if (errorModel != null)
                 {
                     ModelState.TryAddModelError("Email", errorModel.ErrorMessage!);

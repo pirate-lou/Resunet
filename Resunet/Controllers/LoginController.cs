@@ -26,8 +26,8 @@ namespace Resunet.Controllers
         {
             if (ModelState.IsValid)
             {
-                await authBl.AunthenticateUser(
-                    model.Email!, model.Password!, model.RememberMe == true);
+                await authBl.AunthenticateUser(model.Email!, 
+                    model.Password!, model.RememberMe == true);
                 return Redirect("/");
             }
             return View("Index", model);
